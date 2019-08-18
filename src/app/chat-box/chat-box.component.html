@@ -1,6 +1,6 @@
 <div class="container">
-  <div class="messages-box">
-    Messages Will appear here!!!
+  Messages Will appear here!!!
+  <div class="messages-box" #messageBox [scrollTop]="messageBox.scrollHeight">
     <mat-list>
       <!-- Append messages here -->
       <ng-template appPlaceholder></ng-template>

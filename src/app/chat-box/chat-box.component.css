@@ -1,5 +1,8 @@
 .messages-box{
   max-width: 50vw;
+  max-height: 60vh;
+  overflow-y: scroll;
+  border: 1px solid;
   margin-bottom: 3%;
 }
 
