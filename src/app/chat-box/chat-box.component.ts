@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-
+import { Component, OnInit, ComponentFactoryResolver, ViewChild } from '@angular/core';
 import { WebsocketService } from '../services/websocket.service';
+import { MessageComponent } from '../message/message.component';
+import { PlaceholderDirective } from '../directives/placeholder.directive';
 
 
 @Component({
@@ -13,10 +12,21 @@ import { WebsocketService } from '../services/websocket.service';
 })
 export class ChatBoxComponent implements OnInit {
 
-  constructor(private websocketService: WebsocketService) { }
+  private recievedMessage: string;
+  @ViewChild(PlaceholderDirective, {static: false}) messageHost: PlaceholderDirective;
+
+  constructor(private websocketService: WebsocketService, private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
     this.websocketService.connect();
+    this.websocketService.getMessage().subscribe(
+      (message) => {
+        const messageComponentFacotory = this.componentFactoryResolver.resolveComponentFactory(MessageComponent);
+        const messageHostViewContainerRef = this.messageHost.viewContainerRef;
+        const messageRef = messageHostViewContainerRef.createComponent(messageComponentFacotory);
+        messageRef.instance.message = message;
+      }
+    );
   }
 
   sendMessage(message: string) {

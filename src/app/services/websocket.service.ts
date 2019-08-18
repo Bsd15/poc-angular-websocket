@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import * as SockJs from 'sockjs-client';
 import * as Stomp from 'stompjs';
 
@@ -12,6 +13,8 @@ export class WebsocketService {
   private senderEndPoint = '/app/message';
   private recieverEndPoint = '/topic/message';
 
+  private subject = new Subject<any>();
+
   constructor() { }
 
   /**
@@ -23,7 +26,8 @@ export class WebsocketService {
     this.stompClient.connect({}, (frame) => {
       // console.log(frame);
       this.stompClient.subscribe(this.recieverEndPoint, (message) => {
-        console.log(message.body);
+        console.log(message);
+        this.subject.next(message.body); // Forward recieved message to Observable
       });
     });
   }
@@ -44,7 +48,11 @@ export class WebsocketService {
    */
   sendMessage(message: string) {
     this.stompClient.send(this.senderEndPoint, {}, message);
-
   }
+
+  public getMessage(): Observable<any> {
+    return this.subject.asObservable();
+  }
+
 
 }
