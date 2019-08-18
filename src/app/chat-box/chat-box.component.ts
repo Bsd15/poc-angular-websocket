@@ -38,6 +38,7 @@ export class ChatBoxComponent implements OnInit {
     } else {
       console.log('Empty Message');
     }
+    // this.textAreaValue = null;
   }
 
 }
