@@ -1,5 +1,11 @@
 # WebsocketPoc
 
+Requires @type/node package and **add 'node' in types in tsconfig.app.json**
+
+To run SockJs and StompJs in node environment - 'net' is required. [Reference](https://github.com/jmesnil/stomp-websocket/issues/119#issuecomment-271087443)
+
+After installing the module we will get an error **'global is not defined'**. To resolve it see [this](https://github.com/sockjs/sockjs-client/issues/439#issuecomment-398032809).
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.6.
 
 ## Development server

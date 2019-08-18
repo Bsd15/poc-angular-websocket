@@ -1,16 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+
+import { WebsocketService } from '../services/websocket.service';
+
+
 @Component({
   selector: 'app-chat-box',
   templateUrl: './chat-box.component.html',
-  styleUrls: ['./chat-box.component.css']
+  styleUrls: ['./chat-box.component.css'],
+  providers: [WebsocketService]
 })
 export class ChatBoxComponent implements OnInit {
 
-  constructor() { }
+  constructor(private websocketService: WebsocketService) { }
 
   ngOnInit() {
+    this.websocketService.connect();
   }
 
   sendMessage(message: string) {
