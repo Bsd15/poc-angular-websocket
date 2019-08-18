@@ -44,9 +44,9 @@ export class WebsocketService {
 
   /**
    * Sends message to websocket server
-   * @param message String to be sent to websocket
+   * @param message JSON object to be sent to websocket
    */
-  sendMessage(message: string) {
+  sendMessage(message: {}) {
     this.stompClient.send(this.senderEndPoint, {}, message);
   }
 
