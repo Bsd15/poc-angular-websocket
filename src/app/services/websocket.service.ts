@@ -7,20 +7,44 @@ import * as Stomp from 'stompjs';
 })
 export class WebsocketService {
 
+  private stompClient: any;
+  private socketUri = 'http://localhost:8080/succour-web-socket';
+  private senderEndPoint = '/app/message';
+  private recieverEndPoint = '/topic/message';
+
   constructor() { }
 
+  /**
+   * Connects websocket service
+   */
   connect() {
-    const socket = new SockJs('http://localhost:8080/succour-web-socket');
-    const stompClient = Stomp.over(socket);
-    //   stompClient.connect({}, function (frame) {
-    //     setConnected(true);
-    //     console.log('Connected: ' + frame);
-    //     stompClient.subscribe('/topic/message', function (greeting) {
-    //         showGreeting(greeting.body);
-    //     });
-    // });
-    stompClient.connect({}, (frame) => {
-      console.log(frame);
+    const socket = new SockJs(this.socketUri);
+    this.stompClient = Stomp.over(socket);
+    this.stompClient.connect({}, (frame) => {
+      // console.log(frame);
+      this.stompClient.subscribe(this.recieverEndPoint, (message) => {
+        console.log(message.body);
+      });
     });
   }
+
+  /**
+   * Disconnects websocket service
+   */
+  disconnect() {
+    if (this.stompClient !== null) {
+      this.stompClient.disconnect();
+    }
+    console.log('Disconnected');
+  }
+
+  /**
+   * Sends message to websocket server
+   * @param message String to be sent to websocket
+   */
+  sendMessage(message: string) {
+    this.stompClient.send(this.senderEndPoint, {}, message);
+
+  }
+
 }

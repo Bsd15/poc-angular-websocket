@@ -24,6 +24,7 @@ export class ChatBoxComponent implements OnInit {
     // Ref https://stackoverflow.com/a/5487027 for use of below condition.
     if (!!message)  {
       console.log(message);
+      this.websocketService.sendMessage(message);
     } else {
       console.log('Empty Message');
     }
