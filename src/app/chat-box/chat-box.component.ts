@@ -31,7 +31,7 @@ export class ChatBoxComponent implements OnInit {
 
   ngOnInit() {
     this.websocketService.getMessage().subscribe(message => {
-      this.createAndAddMessageComponent(message);
+      this.createAndAddMessageComponent(JSON.parse(message));
     });
   }
 
@@ -39,7 +39,7 @@ export class ChatBoxComponent implements OnInit {
    * Creates and add message component
    * @param message JSON object for creating Message component
    */
-  createAndAddMessageComponent(message: string) {
+  createAndAddMessageComponent(message) {
     // Dynamically add message components to message-box
     const messageComponentFactory = this.componentFactoryResolver.resolveComponentFactory(
       MessageComponent
@@ -48,9 +48,8 @@ export class ChatBoxComponent implements OnInit {
     const messageRef = messageHostViewContainerRef.createComponent(
       messageComponentFactory
     );
-    const response = JSON.parse(message);
-    messageRef.instance.userName = response.userName;
-    messageRef.instance.message = response.message;
+    messageRef.instance.userName = message.userName;
+    messageRef.instance.message = message.message;
   }
 
   sendMessage(message: string) {
@@ -65,12 +64,10 @@ export class ChatBoxComponent implements OnInit {
       // Send message to server
       this.websocketService.sendMessage(JSON.stringify(response));
       // Add message to the chatbox as sent by current user.
-      this.createAndAddMessageComponent(
-        JSON.stringify({
-          userName: 'you',
-          message: message
-        })
-      )
+      this.createAndAddMessageComponent({
+        userName: "you",
+        message: message
+      });
     }
   }
 
