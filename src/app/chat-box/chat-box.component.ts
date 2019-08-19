@@ -13,7 +13,8 @@ import { PlaceholderDirective } from '../directives/placeholder.directive';
 export class ChatBoxComponent implements OnInit {
 
   private recievedMessage: string;
-  @ViewChild(PlaceholderDirective, {static: false}) messageHost: PlaceholderDirective;
+  private userName: string;
+  @ViewChild(PlaceholderDirective, { static: false }) messageHost: PlaceholderDirective;
 
   constructor(private websocketService: WebsocketService, private componentFactoryResolver: ComponentFactoryResolver) { }
 
@@ -35,12 +36,19 @@ export class ChatBoxComponent implements OnInit {
   sendMessage(message: string) {
     message = message.trim();
     // Ref https://stackoverflow.com/a/5487027 for use of below condition.
-    if (!!message)  {
+    if (!!message) {
       const response = {
-        userName : 'test',
-        message : message
+        userName: this.userName,
+        message: message
       };
       this.websocketService.sendMessage(JSON.stringify(response));
+    }
+  }
+
+  setUserName(userName: string) {
+    userName = userName.trim();
+    if (!!userName) {
+      this.userName = userName;
     }
   }
 }

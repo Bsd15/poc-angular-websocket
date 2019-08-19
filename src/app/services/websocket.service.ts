@@ -26,7 +26,6 @@ export class WebsocketService {
     this.stompClient.connect({}, (frame) => {
       // console.log(frame);
       this.stompClient.subscribe(this.recieverEndPoint, (message) => {
-        console.log(message);
         this.subject.next(message.body); // Forward recieved message to Observable
       });
     });
