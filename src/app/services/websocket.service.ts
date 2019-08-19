@@ -11,7 +11,7 @@ export class WebsocketService {
   private stompClient: any;
   private socketUri = 'http://localhost:8080/succour-web-socket';
   private senderEndPoint = '/app/message';
-  private recieverEndPoint = '/topic/message';
+  private recieverEndPoint = '/queue/message';
 
   private subject = new Subject<any>();
 
@@ -20,12 +20,12 @@ export class WebsocketService {
   /**
    * Connects websocket service
    */
-  connect() {
+  connect(userName: string) {
     const socket = new SockJs(this.socketUri);
     this.stompClient = Stomp.over(socket);
     this.stompClient.connect({}, (frame) => {
       // console.log(frame);
-      this.stompClient.subscribe(this.recieverEndPoint, (message) => {
+      this.stompClient.subscribe('/user/' + userName + this.recieverEndPoint, (message) => {
         this.subject.next(message.body); // Forward recieved message to Observable
       });
     });

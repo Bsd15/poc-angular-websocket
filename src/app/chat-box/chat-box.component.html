@@ -1,8 +1,21 @@
 <div class="container">
-  <mat-form-field class="example-full-width">
-    <input matInput #userName placeholder="Username" value="test" (keydown.enter)="setUserName(userName.value)">
-  </mat-form-field>
-  <button mat-raised-button (click)="setUserName(userName.value)">Set Username</button>
+  <div class="username-field-container" *ngIf="showUser">
+    <mat-form-field>
+      <input matInput #userName placeholder="Username" value="test" (keydown.enter)="setUserName(userName.value)">
+    </mat-form-field>
+    <button mat-raised-button (click)="setUserName(userName.value)">Set Username</button>
+  </div>
+  <div class="username-label" *ngIf="!showUser">
+    <p>
+      {{ userName }}
+    </p>
+  </div>
+  <div class="reciever-field-container">
+    <mat-form-field>
+      <input matInput #reciever placeholder="Reciever Name" (keydown.enter)="setReciever(reciever.value)">
+    </mat-form-field>
+    <button mat-raised-button (click)="setReciever(reciever.value)">Set Username</button>
+  </div>
 
   <h2>
     Messages Will appear here!!!
@@ -18,7 +31,7 @@
   <!-- Message TextArea -->
   <!-- <mat-grid-list cols="2" rowHeight="2:1">
     <mat-grid-tile> -->
-  <div class="form-controls">
+  <div class="form-controls" *ngIf="showForm">
     <form class="message-form">
       <mat-form-field class="message-box-full-width">
         <textarea matInput placeholder="Leave a Message" #messageTextArea

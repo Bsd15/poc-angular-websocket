@@ -14,18 +14,20 @@ export class ChatBoxComponent implements OnInit {
 
   private recievedMessage: string;
   private userName: string;
+  private reciever: string;
+  private showForm = false;
+  private showUser = true;
   @ViewChild(PlaceholderDirective, { static: false }) messageHost: PlaceholderDirective;
 
   constructor(private websocketService: WebsocketService, private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
-    this.websocketService.connect();
     this.websocketService.getMessage().subscribe(
       (message) => {
         // Dynamically add message components to message-box
-        const messageComponentFacotory = this.componentFactoryResolver.resolveComponentFactory(MessageComponent);
+        const messageComponentFactory = this.componentFactoryResolver.resolveComponentFactory(MessageComponent);
         const messageHostViewContainerRef = this.messageHost.viewContainerRef;
-        const messageRef = messageHostViewContainerRef.createComponent(messageComponentFacotory);
+        const messageRef = messageHostViewContainerRef.createComponent(messageComponentFactory);
         const response = JSON.parse(message);
         messageRef.instance.userName = response.userName;
         messageRef.instance.message = response.message;
@@ -39,7 +41,8 @@ export class ChatBoxComponent implements OnInit {
     if (!!message) {
       const response = {
         userName: this.userName,
-        message: message
+        message: message,
+        toUser: this.reciever
       };
       this.websocketService.sendMessage(JSON.stringify(response));
     }
@@ -48,7 +51,18 @@ export class ChatBoxComponent implements OnInit {
   setUserName(userName: string) {
     userName = userName.trim();
     if (!!userName) {
+      this.websocketService.connect(userName);
       this.userName = userName;
+      this.showUser = false;
     }
   }
+
+  setReciever(reciever: string) {
+    reciever = reciever.trim();
+    if (!!reciever) {
+      this.reciever = reciever;
+      this.showForm = true;
+    }
+  }
+
 }
