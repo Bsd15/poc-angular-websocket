@@ -14,10 +14,10 @@ export class ChatBoxComponent implements OnInit {
 
   private recievedMessage: string;
   private userName: string;
-  private reciever: string;
+  private toUser: string;
   private showForm = false;
   private showUserForm = true;
-  private showRecieverForm = false;
+  private showToUserForm = false;
   @ViewChild(PlaceholderDirective, { static: false }) messageHost: PlaceholderDirective;
 
   constructor(private websocketService: WebsocketService, private componentFactoryResolver: ComponentFactoryResolver) { }
@@ -44,7 +44,7 @@ export class ChatBoxComponent implements OnInit {
       const response = {
         userName: this.userName,
         message: message,
-        toUser: this.reciever
+        toUser: this.toUser
       };
       this.websocketService.sendMessage(JSON.stringify(response));
     }
@@ -56,16 +56,16 @@ export class ChatBoxComponent implements OnInit {
       this.websocketService.connect(userName);
       this.userName = userName;
       this.showUserForm = false;
-      this.showRecieverForm = true;
+      this.showToUserForm = true;
     }
   }
 
   setReciever(reciever: string) {
     reciever = reciever.trim();
     if (!!reciever) {
-      this.reciever = reciever;
+      this.toUser = reciever;
       this.showForm = true;
-      this.showRecieverForm = false;
+      this.showToUserForm = false;
     }
   }
 

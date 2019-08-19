@@ -6,20 +6,20 @@
     <button mat-raised-button (click)="setUserName(userName.value)">Set Username</button>
   </div>
   <div class="username-label" *ngIf="!showUserForm">
-    <p>
-      {{ userName }}
-    </p>
+    <h3>
+      Username: {{ userName }}
+    </h3>
   </div>
-  <div class="reciever-field-container" *ngIf="showRecieverForm">
+  <div class="reciever-field-container" *ngIf="showToUserForm">
     <mat-form-field>
       <input matInput #reciever placeholder="Reciever Name" (keydown.enter)="setReciever(reciever.value)">
     </mat-form-field>
     <button mat-raised-button (click)="setReciever(reciever.value)">Set Reciever</button>
   </div>
-  <div class="reciever-label" *ngIf="!showfiRecieverForm">
-    <p>
-      {{ reciever }}
-    </p>
+  <div class="reciever-label" *ngIf="!showToUserForm">
+    <h3>
+      TO: {{ toUser }}
+    </h3>
   </div>
 
   <h2>
