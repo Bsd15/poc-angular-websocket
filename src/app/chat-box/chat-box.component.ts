@@ -16,7 +16,8 @@ export class ChatBoxComponent implements OnInit {
   private userName: string;
   private reciever: string;
   private showForm = false;
-  private showUser = true;
+  private showUserForm = true;
+  private showRecieverForm = false;
   @ViewChild(PlaceholderDirective, { static: false }) messageHost: PlaceholderDirective;
 
   constructor(private websocketService: WebsocketService, private componentFactoryResolver: ComponentFactoryResolver) { }
@@ -35,6 +36,7 @@ export class ChatBoxComponent implements OnInit {
     );
   }
 
+  // TODO Add messages sent by current user to message box.
   sendMessage(message: string) {
     message = message.trim();
     // Ref https://stackoverflow.com/a/5487027 for use of below condition.
@@ -53,7 +55,8 @@ export class ChatBoxComponent implements OnInit {
     if (!!userName) {
       this.websocketService.connect(userName);
       this.userName = userName;
-      this.showUser = false;
+      this.showUserForm = false;
+      this.showRecieverForm = true;
     }
   }
 
@@ -62,6 +65,7 @@ export class ChatBoxComponent implements OnInit {
     if (!!reciever) {
       this.reciever = reciever;
       this.showForm = true;
+      this.showRecieverForm = false;
     }
   }
 
