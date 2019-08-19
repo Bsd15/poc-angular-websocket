@@ -1,42 +1,58 @@
-import { Component, OnInit, ComponentFactoryResolver, ViewChild } from '@angular/core';
-import { WebsocketService } from '../services/websocket.service';
-import { MessageComponent } from '../message/message.component';
-import { PlaceholderDirective } from '../directives/placeholder.directive';
-
+import {
+  Component,
+  OnInit,
+  ComponentFactoryResolver,
+  ViewChild
+} from "@angular/core";
+import { WebsocketService } from "../services/websocket.service";
+import { MessageComponent } from "../message/message.component";
+import { PlaceholderDirective } from "../directives/placeholder.directive";
 
 @Component({
-  selector: 'app-chat-box',
-  templateUrl: './chat-box.component.html',
-  styleUrls: ['./chat-box.component.css'],
+  selector: "app-chat-box",
+  templateUrl: "./chat-box.component.html",
+  styleUrls: ["./chat-box.component.css"],
   providers: [WebsocketService]
 })
 export class ChatBoxComponent implements OnInit {
-
   private recievedMessage: string;
   private userName: string;
   private toUser: string;
   private showForm = false;
   private showUserForm = true;
   private showToUserForm = false;
-  @ViewChild(PlaceholderDirective, { static: false }) messageHost: PlaceholderDirective;
+  @ViewChild(PlaceholderDirective, { static: false })
+  messageHost: PlaceholderDirective;
 
-  constructor(private websocketService: WebsocketService, private componentFactoryResolver: ComponentFactoryResolver) { }
+  constructor(
+    private websocketService: WebsocketService,
+    private componentFactoryResolver: ComponentFactoryResolver
+  ) {}
 
   ngOnInit() {
-    this.websocketService.getMessage().subscribe(
-      (message) => {
-        // Dynamically add message components to message-box
-        const messageComponentFactory = this.componentFactoryResolver.resolveComponentFactory(MessageComponent);
-        const messageHostViewContainerRef = this.messageHost.viewContainerRef;
-        const messageRef = messageHostViewContainerRef.createComponent(messageComponentFactory);
-        const response = JSON.parse(message);
-        messageRef.instance.userName = response.userName;
-        messageRef.instance.message = response.message;
-      }
-    );
+    this.websocketService.getMessage().subscribe(message => {
+      this.createAndAddMessageComponent(message);
+    });
   }
 
-  // TODO Add messages sent by current user to message box.
+  /**
+   * Creates and add message component
+   * @param message JSON object for creating Message component
+   */
+  createAndAddMessageComponent(message: string) {
+    // Dynamically add message components to message-box
+    const messageComponentFactory = this.componentFactoryResolver.resolveComponentFactory(
+      MessageComponent
+    );
+    const messageHostViewContainerRef = this.messageHost.viewContainerRef;
+    const messageRef = messageHostViewContainerRef.createComponent(
+      messageComponentFactory
+    );
+    const response = JSON.parse(message);
+    messageRef.instance.userName = response.userName;
+    messageRef.instance.message = response.message;
+  }
+
   sendMessage(message: string) {
     message = message.trim();
     // Ref https://stackoverflow.com/a/5487027 for use of below condition.
@@ -46,7 +62,15 @@ export class ChatBoxComponent implements OnInit {
         message: message,
         toUser: this.toUser
       };
+      // Send message to server
       this.websocketService.sendMessage(JSON.stringify(response));
+      // Add message to the chatbox as sent by current user.
+      this.createAndAddMessageComponent(
+        JSON.stringify({
+          userName: 'you',
+          message: message
+        })
+      )
     }
   }
 
@@ -68,5 +92,4 @@ export class ChatBoxComponent implements OnInit {
       this.showToUserForm = false;
     }
   }
-
 }
